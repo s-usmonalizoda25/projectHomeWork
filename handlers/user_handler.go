@@ -3,19 +3,22 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"project/storage"
-	"project/models" 
-	"strconv"
 	"os"
+	"project/logger"
+	"project/models"
+	"project/storage"
+	"strconv"
 )
 
 type UserHandler struct {
 	Storage *storage.UserStorage
+	Log     *logger.Logger
 }
+
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Метод не поддерживается. Используйте GET"))
+		w.Write([]byte("Метод не поддерживается.Используйте GET"))
 		return
 	}
 
@@ -31,12 +34,10 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
-
-
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Метод не поддерживается. Используйте POST"))
+		w.Write([]byte("Метод не поддерживается.Используйте POST"))
 		return
 	}
 
@@ -69,7 +70,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Метод не поддерживается. Используйте GET"))
+		w.Write([]byte("Метод не поддерживается.Используйте GET"))
 		return
 	}
 
@@ -89,13 +90,14 @@ func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 	if user == nil {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("404 Not Found: Пользователь не найден"))
+		w.Write([]byte("404 Not Found:Пользователь не найден"))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
+
 func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -133,4 +135,3 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"message": "Данные пользователя успешно обновлены!"}`))
 }
-

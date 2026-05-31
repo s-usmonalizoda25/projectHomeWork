@@ -1,12 +1,12 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
+	"project/logger"
 )
-func Logging(next http.Handler) http.Handler {
+func Logging(log *logger.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("[ЛОГ] %s %s\n", r.Method, r.URL.Path)
+		log.Info("Входящий запрос: " + r.Method + " " + r.URL.Path)
 		next.ServeHTTP(w, r)
 	})
 }

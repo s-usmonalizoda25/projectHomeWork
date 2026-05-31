@@ -4,18 +4,20 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"sync"
+	"project/logger"
 	"project/models"
+	"sync"
 )
 
 type UserStorage struct {
-	Mu sync.Mutex
+	Mu       sync.Mutex
 	FileName string
+	Log      *logger.Logger
 }
 
 func (s *UserStorage) GetAll() ([]models.User, error) {
 	s.Mu.Lock()
-	defer s.Mu.Unlock() 
+	defer s.Mu.Unlock()
 	if _, err := os.Stat(s.FileName); os.IsNotExist(err) {
 		return []models.User{}, nil
 	}
@@ -39,7 +41,6 @@ func (s *UserStorage) GetAll() ([]models.User, error) {
 	return users, nil
 }
 
-
 func (s *UserStorage) save(users []models.User) error {
 	byteValue, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {
@@ -51,9 +52,6 @@ func (s *UserStorage) save(users []models.User) error {
 	}
 	return nil
 }
-
-
-
 
 func (s *UserStorage) Create(user models.User) error {
 	s.Mu.Lock()
@@ -79,8 +77,6 @@ func (s *UserStorage) Create(user models.User) error {
 	return s.save(users)
 }
 
-
-
 func (s *UserStorage) GetByID(id int) (*models.User, error) {
 	users, err := s.GetAll()
 	if err != nil {
@@ -93,7 +89,6 @@ func (s *UserStorage) GetByID(id int) (*models.User, error) {
 	}
 	return nil, nil
 }
-
 
 func (s *UserStorage) Update(id int, updatedUser models.User) error {
 	s.Mu.Lock()

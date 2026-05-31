@@ -7,7 +7,7 @@ func Auth(next http.Handler) http.Handler {
 		token := r.Header.Get("Authorization")
 		if token != "secret" {
 			w.WriteHeader(http.StatusUnauthorized)
-			w.Write([]byte("401 Unauthorized: Неверный или отсутствующий токен"))
+			w.Write([]byte("401 Unauthorized:Неверный или отсутствующий токен"))
 			return
 		}
 		next.ServeHTTP(w, r)
